@@ -3,9 +3,8 @@ import requests
 
 app = Flask(__name__)
 
-# Coloque aqui seu token e ID da instância
-ZAPI_TOKEN = "9CDFB6C199E6DDBB55C"
-INSTANCE_ID = "3E5488211720F1DB97E"
+ZAPI_TOKEN = "9CDFB6C199E6DDBB55C38269"
+INSTANCE_ID = "3E5488211720F1DB97EC823C7623CF8E"
 
 ZAPI_URL = f"https://api.z-api.io/instances/{INSTANCE_ID}/token/{ZAPI_TOKEN}/send-message"
 
@@ -16,39 +15,39 @@ def enviar_mensagem(numero, mensagem):
     }
     requests.post(ZAPI_URL, json=payload)
 
-# Respostas automáticas
+# Mensagens automáticas
 texto_boas_vindas = (
     "Olá! 👋 Seja bem-vindo(a) à SD Móveis Projetados.\n"
     "Transformamos ambientes com móveis planejados sob medida.\n\n"
-    "Para agilizar seu atendimento, escolha uma opção:\n"
+    "Escolha uma opção:\n"
     "1️⃣ Fazer um orçamento\n"
     "2️⃣ Agendar uma visita técnica\n"
     "3️⃣ Falar com um atendente"
 )
 
 resposta_1 = (
-    "Perfeito! Para fazer um orçamento, por favor me informe:\n"
+    "Perfeito! Para fazer um orçamento, me envie:\n"
     "- Nome completo\n"
-    "- Ambiente (cozinha, quarto, sala, escritório, etc.)\n"
+    "- Ambiente (cozinha, quarto, sala...)\n"
     "- Cidade e bairro\n"
-    "- Envie fotos ou medidas se tiver 📐"
+    "- Fotos ou medidas se tiver 📝"
 )
 
 resposta_2 = (
-    "Ótimo! Para agendar uma visita técnica, me informe:\n"
+    "Ótimo! Para agendar uma visita técnica, me diga:\n"
     "- Nome completo\n"
     "- Endereço\n"
     "- Melhor dia e horário 📅"
 )
 
 resposta_3 = (
-    "Certo! Vou transferir você para um atendente.\n"
-    "Em instantes, alguém da nossa equipe irá te responder. 🤝"
+    "Certo! Vou te transferir para um atendente. Aguarde um instante. 🤝"
 )
 
 @app.route("/", methods=["POST"])
 def webhook():
     data = request.json
+
     if not data or "message" not in data or "from" not in data["message"]:
         return jsonify({"status": "ignorado"}), 200
 
@@ -68,7 +67,7 @@ def webhook():
 
 @app.route("/", methods=["GET"])
 def home():
-    return "🤖 Bot SD Móveis está ativo!", 200
+    return "Bot SD Móveis ativo!", 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
