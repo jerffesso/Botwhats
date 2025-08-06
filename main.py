@@ -51,11 +51,11 @@ resposta_3 = (
 def webhook():
     data = request.json
 
-    if not data or "message" not in data or "phone" not in data:
+    if not data or "message" not in data or "from" not in data["message"]:
         return jsonify({"status": "ignorado"}), 200
 
-    mensagem = data["message"].strip()
-    numero = data["phone"]
+    mensagem = data["message"]["text"]["body"].strip()
+    numero = data["message"]["from"]
 
     if mensagem == "1":
         enviar_mensagem(numero, resposta_1)
@@ -64,7 +64,6 @@ def webhook():
     elif mensagem == "3":
         enviar_mensagem(numero, resposta_3)
     else:
-        # Resposta padrão para qualquer mensagem
         enviar_mensagem(numero, texto_boas_vindas)
 
     return jsonify({"status": "ok"}), 200
