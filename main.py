@@ -3,6 +3,7 @@ import requests
 
 app = Flask(__name__)
 
+# Substitua com seus próprios dados
 ZAPI_TOKEN = "9CDFB6C199E6DDBB55C38269"
 INSTANCE_ID = "3E5488211720F1DB97EC823C7623CF8E"
 
@@ -15,8 +16,8 @@ def enviar_mensagem(numero, mensagem):
     }
     requests.post(ZAPI_URL, json=payload)
 
-# Respostas prontas
-texto_boas_vindas = (
+# Mensagens automáticas
+mensagem_boas_vindas = (
     "Olá! 👋 Seja bem-vindo(a) à SD Móveis Projetados.\n"
     "Transformamos ambientes com móveis planejados sob medida.\n\n"
     "Para agilizar seu atendimento, escolha uma opção:\n"
@@ -25,7 +26,7 @@ texto_boas_vindas = (
     "3️⃣ Falar com um atendente"
 )
 
-resposta_1 = (
+mensagem_opcao_1 = (
     "Perfeito! Para fazer um orçamento, por favor me informe:\n"
     "- Nome completo\n"
     "- Ambiente (cozinha, quarto, sala, escritório, etc.)\n"
@@ -34,7 +35,7 @@ resposta_1 = (
     "Assim conseguimos preparar uma proposta inicial para você. 📝"
 )
 
-resposta_2 = (
+mensagem_opcao_2 = (
     "Ótimo! Para agendar uma visita técnica, me informe:\n"
     "- Nome completo\n"
     "- Endereço\n"
@@ -42,29 +43,28 @@ resposta_2 = (
     "Nossa equipe entrará em contato para confirmar o agendamento. 📅"
 )
 
-resposta_3 = (
+mensagem_opcao_3 = (
     "Certo! Vou transferir você para um atendente.\n"
     "Em instantes alguém da nossa equipe irá te responder. 🤝"
 )
 
 @app.route("/", methods=["POST"])
-def webhook():
+def receber_mensagem():
     data = request.json
-
     if not data or "message" not in data or "from" not in data["message"]:
         return jsonify({"status": "ignorado"}), 200
 
-    mensagem = data["message"]["text"]["body"].strip()
+    mensagem = data["message"]["text"]["body"].strip().lower()
     numero = data["message"]["from"]
 
     if mensagem == "1":
-        enviar_mensagem(numero, resposta_1)
+        enviar_mensagem(numero, mensagem_opcao_1)
     elif mensagem == "2":
-        enviar_mensagem(numero, resposta_2)
+        enviar_mensagem(numero, mensagem_opcao_2)
     elif mensagem == "3":
-        enviar_mensagem(numero, resposta_3)
+        enviar_mensagem(numero, mensagem_opcao_3)
     else:
-        enviar_mensagem(numero, texto_boas_vindas)
+        enviar_mensagem(numero, mensagem_boas_vindas)
 
     return jsonify({"status": "ok"}), 200
 
